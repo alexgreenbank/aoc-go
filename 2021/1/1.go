@@ -18,10 +18,11 @@ func main() {
 	}
 	defer file.Close()
 
-	var cache int
+	var cache [4]int
 
 	idx := 0
 	part1 := 0
+	part2 := 0
 
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
@@ -31,10 +32,19 @@ func main() {
 			log.Fatal(err)
 		}
 		idx++
-		if idx > 1 && n > cache {
+		// Use a circular queue to store the 4 most recent values
+		cache[idx%4] = n
+		// If we have at least one previous value we can compare it
+		if idx > 1 && n > cache[(idx-1)%4] {
 			part1++
 		}
-		cache = n
+		// If we have at least three previous values we can compare
+		// A+B+C > B+C+D
+		// B+C are common to both sides so this can be simplified to:-
+		// A > D
+		if idx > 3 && n > cache[(idx-3)%4] {
+			part2++
+		}
 	}
 
 	if err := scanner.Err(); err != nil {
@@ -42,4 +52,5 @@ func main() {
 	}
 
 	fmt.Printf("part1: %d\n", part1)
+	fmt.Printf("part2: %d\n", part2)
 }

@@ -18,6 +18,7 @@ func main() {
 	defer file.Close()
 
 	p1 := 0
+	p2 := 0
 
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
@@ -40,6 +41,9 @@ func main() {
 		if cfreq[c] >= min && cfreq[c] <= max {
 			p1++
 		}
+		if (s[min-1] == c) != (s[max-1] == c) {
+			p2++
+		}
 	}
 
 	if err := scanner.Err(); err != nil {
@@ -47,4 +51,5 @@ func main() {
 	}
 
 	fmt.Printf("part1: %d\n", p1)
+	fmt.Printf("part2: %d\n", p2)
 }
